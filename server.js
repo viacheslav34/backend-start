@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
 const port = 3001;
@@ -24,6 +25,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get('/users', (req, res) => {
     res.send(makeRandomUser())
+
+    fs.unlink('out.json', function (err) {
+        if (err) throw err;
+        // if no error, file has been deleted successfully
+        console.log('File deleted!');
+    });
 });
 
 app.listen(port);
