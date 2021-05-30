@@ -1,29 +1,37 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
 const port = 3001;
+/**
+ * https://medium.com/wesionary-team/create-your-first-rest-api-with-node-js-express-and-mongodb-447fce535385
+ * @type {string}
+ */
+const dbPath = 'mongodb://localhost/testers_gonna_test';
+const options = {useNewUrlParser: true, useUnifiedTopology: true};
+const mongo = mongoose.connect(dbPath, options);
 
-const makeRandomUser = () => {
-    const names = ['Peter', 'Marina', 'Robert', 'Bazil'];
-    const ages = [12, 13, 15, 21];
-    const jobs = ['coder', 'cook', 'teacher', 'singer'];
-    const randIdx = Math.floor(Math.random() * 4);
+const apiRoutes = require('./controller/UserController');
 
-    return {
-        name: names[randIdx],
-        age: ages[randIdx],
-        job: jobs[randIdx]
-    }
-};
+mongo.then(() => {
+    console.log('connected');
+}, error => {
+    console.log(error, 'error');
+});
+const db = mongoose.connection;
+
+//Check DB Connection
+if (!db)
+    console.log("Error connecting db");
+else
+    console.log("DB Connected Successfully");
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
-app.get('/users', (req, res) => {
-    res.send(makeRandomUser())
-});
+app.use('/api', apiRoutes);
 
 app.listen(port);
