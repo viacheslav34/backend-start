@@ -26,6 +26,10 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/users', (req, res) => {
     res.send(makeRandomUser())
 
+    /**
+     * Remove Dir
+     * https://stackoverflow.com/a/18052969/13001542
+     */
     fs.unlink('out.json', function (err) {
         if (err) throw err;
         // if no error, file has been deleted successfully
