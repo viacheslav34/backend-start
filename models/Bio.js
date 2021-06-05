@@ -25,7 +25,7 @@ const bioSchema = mongoose.Schema({
 });
 
 // Export Bio Model
-const Bio = module.exports = mongoose.model('bio', bioSchema);
+const Bio = mongoose.model('bio', bioSchema);
 
 Bio.get = function (callback, limit) {
     Bio.find(callback).limit(limit);
@@ -47,6 +47,7 @@ Bio.index = function (req, res) {
 };
 
 Bio.getById = function (req, res) {
+    // https://mongoosejs.com/docs/api.html#model_Model.findById
     Bio.findById(req.params.bio_id, function (err, bio) {
         if (err)
             res.send(err);
