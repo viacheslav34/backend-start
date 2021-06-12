@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 //schema
 const bioSchema = mongoose.Schema({
     name: {
+        type: String,
+        required: true
+    },
+    password: {
         type: String,
         required: true
     },
@@ -58,12 +63,13 @@ Bio.getById = function (req, res) {
     });
 };
 
-Bio.add = function (req, res) {
+Bio.add = async function (req, res) {
     const bio = new Bio();
-    bio.name = req.body.name? req.body.name: bio.name;
+    bio.name = req.body.name ? req.body.name : bio.name;
     bio.email = req.body.email;
     bio.phone = req.body.phone;
     bio.address = req.body.address;
+    bio.password = await bcrypt.hash(req.body.password, 10);
 
     //Save and check error
     bio.save(function (err) {
